@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Viral Retention Slicer</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          slate: { 950: '#0a0e14' },
+        },
+        boxShadow: {
+          neon: '0 0 8px rgba(34,211,238,0.6), 0 0 24px rgba(34,211,238,0.25)',
+        },
+      },
+    },
+  };
+</script>
+<style>
+  body { background: radial-gradient(circle at 20% 0%, #131a24 0%, #0a0e14 55%); }
+  .neon-border { border: 1px solid rgba(34,211,238,0.4); box-shadow: 0 0 8px rgba(34,211,238,0.15); }
+  .neon-border:focus-within { box-shadow: 0 0 0 2px rgba(34,211,238,0.5), 0 0 20px rgba(34,211,238,0.3); }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-thumb { background: #164e63; border-radius: 8px; }
+  .spinner {
+    border: 3px solid rgba(34,211,238,0.15);
+    border-top-color: #22d3ee;
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .fade-in { animation: fadeIn 0.35s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body class="min-h-screen text-zinc-200 font-sans">
+
+  <div class="max-w-4xl mx-auto px-6 py-12">
+
+    <!-- Header -->
+    <header class="mb-10 text-center">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+        Viral <span class="text-cyan-400">Retention</span> Slicer
+      </h1>
+      <p class="mt-2 text-zinc-400 text-sm">
+        Drop a long-form or stream link. Get back the exact segments your style DNA says will hit.
+      </p>
+    </header>
+
+    <!-- API Key Modal -->
+    <div id="key-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50">
+      <div class="bg-zinc-900 neon-border rounded-2xl p-6 w-full max-w-md mx-4 fade-in">
+        <h2 class="text-lg font-semibold text-white mb-1">Set your Gemini API Key</h2>
+        <p class="text-zinc-400 text-sm mb-4">
+          Stored only in your browser's local session — never sent anywhere but your own backend.
+        </p>
+        <input id="key-input" type="password" placeholder="AIza..."
+          class="w-full bg-zinc-950 border border-zinc-700 focus:border-cyan-400 outline-none rounded-lg px-4 py-2.5 text-sm mb-4 text-zinc-100" />
+        <button id="key-save-btn"
+          class="w-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-semibold rounded-lg py-2.5 text-sm transition">
+          Save Key & Continue
+        </button>
+      </div>
+    </div>
+
+    <!-- Main input card -->
+    <div class="bg-zinc-900/60 neon-border rounded-2xl p-6 mb-8">
+      <label class="block text-sm text-zinc-400 mb-2">Target YouTube video or stream URL</label>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input id="video-url" type="text" placeholder="https://youtube.com/watch?v=..."
+          class="flex-1 bg-zinc-950 border border-zinc-700 focus:border-cyan-400 outline-none rounded-lg px-4 py-3 text-sm text-zinc-100" />
+        <button id="analyze-btn"
+          class="bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-semibold rounded-lg px-6 py-3 text-sm transition flex items-center justify-center gap-2 disabled:opacity-50">
+          <span id="analyze-btn-text">Slice It</span>
+        </button>
+      </div>
+      <div class="flex justify-between items-center mt-3">
+        <button id="change-key-btn" class="text-xs text-zinc-500 hover:text-cyan-400 transition">
+          Change API key
+        </button>
+        <span id="status-text" class="text-xs text-zinc-500"></span>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div id="loading-state" class="hidden flex items-center gap-3 justify-center py-10 text-zinc-400 text-sm">
+      <div class="spinner"></div>
+      <span>Analyzing transcript against your style DNA...</span>
+    </div>
+
+    <!-- Error state -->
+    <div id="error-state" class="hidden bg-red-950/40 border border-red-500/40 text-red-300 rounded-xl px-4 py-3 text-sm mb-6"></div>
+
+    <!-- Results -->
+    <div id="results" class="space-y-4"></div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
